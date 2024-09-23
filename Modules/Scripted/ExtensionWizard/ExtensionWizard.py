@@ -190,7 +190,7 @@ class ExtensionWizardWidget:
                 self.templateManager.addPath(builtinPath)
             except:
 
-                qt.qWarning(_("failed to add built-in template {path}").format(path=builtinPath))
+                qt.qWarning("failed to add built-in template {path}").format(path=builtinPath)
 
                 qt.qWarning(traceback.format_exc())
 
@@ -201,7 +201,7 @@ class ExtensionWizardWidget:
                 self.templateManager.addPath(path)
             except:
 
-                qt.qWarning(_("failed to add template {path}").format(path=path)
+                qt.qWarning("failed to add template {path}").format(path=path)
 
                 qt.qWarning(traceback.format_exc())
 
@@ -213,12 +213,12 @@ class ExtensionWizardWidget:
                     self.templateManager.addCategoryPath(c, path)
                 except:
                     mp = (c, path)
-                    qt.qWarning(_("failed to add template {path} for {category}").format(path=mp))
+                    qt.qWarning("failed to add template {path} for {category}").format(path=mp)
                     qt.qWarning(traceback.format_exc())
 
     # ---------------------------------------------------------------------------
     def createExtension(self):
-        dlg = CreateComponentDialog(_("extension"), self.parent.window())
+        dlg = CreateComponentDialog("extension", self.parent.window())
         dlg.setTemplates(self.templateManager.templates("extensions"))
 
         while dlg.exec_() == qt.QDialog.Accepted:
@@ -293,7 +293,7 @@ class ExtensionWizardWidget:
             xp = SlicerWizard.ExtensionProject(path)
 
         except:
-            slicer.util.errorDisplay(_("Failed to open extension '%s'.") % path, parent=self.parent.window(),
+            slicer.util.errorDisplay(_("Failed to open extension {path}.").format(path=path), parent=self.parent.window(),
                                      detailedText=traceback.format_exc(), standardButtons=qt.QMessageBox.Close)
             return False
 
@@ -307,11 +307,11 @@ class ExtensionWizardWidget:
 
         if xd.scmurl == "NA":
             if repo is None:
-                repoText = _("(none)")
-            elif hasattr(repo, _("remotes")):
-                repoText = _("(local git repository)")
+                repoText = "(none)"
+            elif hasattr(repo, "remotes"):
+                repoText = "(local git repository)"
             else:
-                repoText = _("(unknown local repository)")
+                repoText = "(unknown local repository)"
 
             self.extensionRepositoryField.clear()
             self.extensionRepositoryField.placeholderText = repoText
@@ -420,7 +420,7 @@ class ExtensionWizardWidget:
             # against that just in case...
             return
 
-        dlg = CreateComponentDialog(_("module"), self.parent.window())
+        dlg = CreateComponentDialog("module", self.parent.window())
         dlg.setTemplates(self.templateManager.templates("modules"),
                          default="scripted")
         dlg.showDestination = False
