@@ -16,6 +16,9 @@ from ExtensionWizardLib import *
 from slicer.i18n import tr as _
 from slicer.i18n import translate
 
+from slicer.i18n import tr as _
+from slicer.i18n import translate
+
 
 # -----------------------------------------------------------------------------
 def _settingsList(settings, key, convertToAbsolutePaths=False):
@@ -45,7 +48,9 @@ class ExtensionWizard:
     # ---------------------------------------------------------------------------
     def __init__(self, parent):
         parent.title = _("Extension Wizard")
+        parent.title = _("Extension Wizard")
         parent.icon = qt.QIcon(":/Icons/Medium/ExtensionWizard.png")
+        parent.categories = [translate("qSlicerAbstractCoreModule", "Developer Tools")]
         parent.categories = [translate("qSlicerAbstractCoreModule", "Developer Tools")]
         parent.dependencies = []
         parent.contributors = ["Matthew Woehlke (Kitware)"]
@@ -126,11 +131,14 @@ class ExtensionWizardWidget:
         #
         self.toolsCollapsibleButton = ctk.ctkCollapsibleButton()
         self.toolsCollapsibleButton.text = _("Extension Tools")
+        self.toolsCollapsibleButton.text = _("Extension Tools")
         self.layout.addWidget(self.toolsCollapsibleButton)
 
         self.createExtensionButton = createToolButton(_("Create Extension"))
+        self.createExtensionButton = createToolButton(_("Create Extension"))
         self.createExtensionButton.connect("clicked(bool)", self.createExtension)
 
+        self.selectExtensionButton = createToolButton(_("Select Extension"))
         self.selectExtensionButton = createToolButton(_("Select Extension"))
         self.selectExtensionButton.connect("clicked(bool)", self.selectExtension)
 
@@ -142,6 +150,7 @@ class ExtensionWizardWidget:
         # Editor Area
         #
         self.editorCollapsibleButton = ctk.ctkCollapsibleButton()
+        self.editorCollapsibleButton.text = _("Extension Editor")
         self.editorCollapsibleButton.text = _("Extension Editor")
         self.editorCollapsibleButton.enabled = False
         self.editorCollapsibleButton.collapsed = True
@@ -158,14 +167,20 @@ class ExtensionWizardWidget:
         self.extensionContentsView.hideColumn(3)
 
         self.createExtensionModuleButton = createToolButton(_("Add Module to Extension"))
+        self.createExtensionModuleButton = createToolButton(_("Add Module to Extension"))
         self.createExtensionModuleButton.connect("clicked(bool)",
                                                  self.createExtensionModule)
 
+        self.editExtensionMetadataButton = createToolButton(_("Edit Extension Metadata"))
         self.editExtensionMetadataButton = createToolButton(_("Edit Extension Metadata"))
         self.editExtensionMetadataButton.connect("clicked(bool)",
                                                  self.editExtensionMetadata)
 
         editorLayout = qt.QFormLayout(self.editorCollapsibleButton)
+        editorLayout.addRow(_("Name:"), self.extensionNameField)
+        editorLayout.addRow(_("Location:"), self.extensionLocationField)
+        editorLayout.addRow(_("Repository:"), self.extensionRepositoryField)
+        editorLayout.addRow(_("Contents:"), self.extensionContentsView)
         editorLayout.addRow(_("Name:"), self.extensionNameField)
         editorLayout.addRow(_("Location:"), self.extensionLocationField)
         editorLayout.addRow(_("Repository:"), self.extensionRepositoryField)
@@ -252,6 +267,7 @@ class ExtensionWizardWidget:
                     createInSubdirectory, requireEmptyDirectory)
 
             except:
+                if not slicer.util.confirmRetryCloseDisplay(_("An error occurred while trying to create the extension.")),
                 if not slicer.util.confirmRetryCloseDisplay(_("An error occurred while trying to create the extension."),
                                                             parent=self.parent.window(), detailedText=traceback.format_exc()):
                     return
@@ -267,6 +283,7 @@ class ExtensionWizardWidget:
     def selectExtension(self, path=None):
         if path is None or isinstance(path, bool):
             path = qt.QFileDialog.getExistingDirectory(
+                self.parent.window(), _("Select Extension..."),
                 self.parent.window(), _("Select Extension..."),
                 self.extensionLocation)
 
@@ -293,6 +310,7 @@ class ExtensionWizardWidget:
             xp = SlicerWizard.ExtensionProject(path)
 
         except:
+            slicer.util.errorDisplay(_("Failed to open extension {path}.").format(path=path), parent=self.parent.window()),
             slicer.util.errorDisplay(_("Failed to open extension {path}.").format(path=path), parent=self.parent.window(),
                                      detailedText=traceback.format_exc(), standardButtons=qt.QMessageBox.Close)
             return False
@@ -307,11 +325,11 @@ class ExtensionWizardWidget:
 
         if xd.scmurl == "NA":
             if repo is None:
-                repoText = "(none)"
+                repoText = _("(none)")
             elif hasattr(repo, "remotes"):
-                repoText = "(local git repository)"
+                repoText = _("(local git repository)")
             else:
-                repoText = "(unknown local repository)"
+                repoText = _("(unknown local repository)")
 
             self.extensionRepositoryField.clear()
             self.extensionRepositoryField.placeholderText = repoText
@@ -400,6 +418,7 @@ class ExtensionWizardWidget:
                     detailedInformation = "".join(
                         [failedFormat % m.__dict__ for m in failed])
 
+                    slicer.util.errorDisplay(text, parent=parent, windowTitle=_("Module loading failed")),
                     slicer.util.errorDisplay(text, parent=parent, windowTitle=_("Module loading failed"),
                                              standardButtons=qt.QMessageBox.Close, informativeText=detailedInformation)
 
@@ -407,9 +426,11 @@ class ExtensionWizardWidget:
 
                 # Instantiate and load requested module(s)
                 if not factory.loadModules([module.key for module in modulesToLoad]):
+                    text = _("The module factory manager reported an error. ")
                     text = _("The module factory manager reported an error. "
                             "One or more of the requested module(s) and/or "
                             "dependencies thereof may not have been loaded.")
+                    slicer.util.errorDisplay(text, parent=parent, windowTitle=_("Error loading module(s)")),
                     slicer.util.errorDisplay(text, parent=parent, windowTitle=_("Error loading module(s)"),
                                              standardButtons=qt.QMessageBox.Close)
 
@@ -433,7 +454,8 @@ class ExtensionWizardWidget:
                                                   dlg.componentType, name)
 
             except:
-                if not slicer.util.confirmRetryCloseDisplay(_("An error occurred while trying to create the module."),
+                if not slicer.util.confirmRetryCloseDisplay(_("An error occurred while trying to create the module.")):
+                if not slicer.util.confirmRetryCloseDisplay(_("An error occurred while trying to create the module.")
                                                             parent=self.parent.window(),
                                                             detailedText=traceback.format_exc()):
                     return
@@ -497,6 +519,8 @@ class ExtensionWizardFileDialog:
 
     def __init__(self, qSlicerFileDialog):
         self.qSlicerFileDialog = qSlicerFileDialog
+        qSlicerFileDialog.fileType = _("Python scripted modules")
+        qSlicerFileDialog.description = _("Add Python scripted modules to the application")
         qSlicerFileDialog.fileType = _("Python scripted modules")
         qSlicerFileDialog.description = _("Add Python scripted modules to the application")
         qSlicerFileDialog.action = slicer.qSlicerFileDialog.Read

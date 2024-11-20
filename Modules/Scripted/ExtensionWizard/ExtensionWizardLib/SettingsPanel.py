@@ -6,6 +6,7 @@ import SlicerWizard.TemplateManager
 from .DirectoryListWidget import DirectoryListWidget
 from .TemplatePathUtilities import *
 from slicer.i18n import tr as _
+from slicer.i18n import tr as _
 
 # =============================================================================
 #
@@ -23,8 +24,10 @@ class _ui_SettingsPanel:
             self.builtinPath.text = builtinPath
         else:
             self.builtinPath.text = _("(Unavailable)")
+            self.builtinPath.text = _("(Unavailable)")
             self.builtinPath.enabled = False
         self.builtinPath.readOnly = True
+        self.addRow(_("Built-in template path:"), self.builtinPath)
         self.addRow(_("Built-in template path:"), self.builtinPath)
 
         self.genericPaths = DirectoryListWidget()

@@ -3,6 +3,7 @@ import qt
 import slicer
 
 from slicer.i18n import tr as _
+from slicer.i18n import tr as _
 
 # -----------------------------------------------------------------------------
 def _dialogIcon(icon):
@@ -41,6 +42,12 @@ class _ui_LoadModulesDialog:
         self.addToSearchPaths.checked = True
 
         self.enableDeveloperMode = qt.QCheckBox()
+        self.enableDeveloperMode.text = _("Enable developer mode")
+        self.enableDeveloperMode.toolTip = _("Sets the 'Developer mode' "
+            "application option to enabled. Enabling developer mode is "
+            "recommended while developing scripted modules, as it makes "
+            "the Reload and Testing section displayed in "
+            "the module user interface.")
         self.enableDeveloperMode.text = _("Enable developer mode")
         self.enableDeveloperMode.toolTip = _("Sets the 'Developer mode' "
             "application option to enabled. Enabling developer mode is "
@@ -87,7 +94,9 @@ class LoadModulesDialog:
 
         if moduleCount == 1:
             self.ui.addToSearchPaths.text = _("Add selected module to 'Additional module paths'")
+            self.ui.addToSearchPaths.text = _("Add selected module to 'Additional module paths'")
         else:
+            self.ui.addToSearchPaths.text = _("Add selected modules to 'Additional module paths'")
             self.ui.addToSearchPaths.text = _("Add selected modules to 'Additional module paths'")
 
         # If developer mode is already enabled then don't even show the option
@@ -123,6 +132,7 @@ class LoadModulesDialog:
                 "Would you like to load it now?")
 
         else:
+            raise ValueError(_("At least one module must be provided"))
             raise ValueError(_("At least one module must be provided"))
 
         self.validate()

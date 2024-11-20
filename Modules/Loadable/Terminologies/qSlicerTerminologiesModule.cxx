@@ -66,6 +66,7 @@ QString qSlicerTerminologiesModule::helpText()const
 {
   QString help =
     tr("The Terminologies module enables viewing and editing terminology dictionaries used for segmentation.");
+    tr("The Terminologies module enables viewing and editing terminology dictionaries used for segmentation.");
   help += this->defaultDocumentationLink();
   return help;
 }

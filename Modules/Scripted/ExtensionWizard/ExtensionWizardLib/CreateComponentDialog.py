@@ -7,6 +7,8 @@ import slicer
 
 from slicer.i18n import tr as _
 
+from slicer.i18n import tr as _
+
 
 # =============================================================================
 #
@@ -21,6 +23,7 @@ class _ui_CreateComponentDialog:
 
         self.componentName = qt.QLineEdit()
         self.formLayout.addRow(_("Name:"), self.componentName)
+        self.formLayout.addRow(_("Name:"), self.componentName)
 
         self.componentNameValidator = qt.QRegExpValidator(
             qt.QRegExp(r"^[a-zA-Z_][a-zA-Z0-9_]*$"))
@@ -28,9 +31,11 @@ class _ui_CreateComponentDialog:
 
         self.componentType = qt.QComboBox()
         self.formLayout.addRow(_("Type:"), self.componentType)
+        self.formLayout.addRow(_("Type:"), self.componentType)
 
         self.destination = ctk.ctkPathLineEdit()
         self.destination.filters = ctk.ctkPathLineEdit.Dirs
+        self.formLayout.addRow(_("Destination:"), self.destination)
         self.formLayout.addRow(_("Destination:"), self.destination)
 
         self.vLayout.addLayout(self.formLayout)

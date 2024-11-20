@@ -7,6 +7,7 @@ import slicer
 from .EditableTreeWidget import EditableTreeWidget
 
 from slicer.i18n import tr as _
+from slicer.i18n import tr as _
 
 # -----------------------------------------------------------------------------
 def _map_property(objfunc, name):
@@ -31,14 +32,19 @@ class _ui_EditExtensionMetadataDialog:
         self.categoryEdit = qt.QLineEdit()
         formLayout.addRow(_("Category:"), self.categoryEdit)
 
+        self.categoryEdit = qt.QLineEdit()
+        formLayout.addRow(_("Category:"), self.categoryEdit)
         self.descriptionEdit = qt.QTextEdit()
         self.descriptionEdit.acceptRichText = False
+        formLayout.addRow(_("Description:"), self.descriptionEdit)
         formLayout.addRow(_("Description:"), self.descriptionEdit)
 
         self.contributorsList = EditableTreeWidget()
         self.contributorsList.rootIsDecorated = False
         self.contributorsList.selectionBehavior = qt.QAbstractItemView.SelectRows
         self.contributorsList.selectionMode = qt.QAbstractItemView.ExtendedSelection
+        self.contributorsList.setHeaderLabels([_("Name"), _("Organization")])
+        formLayout.addRow(_("Contributors:"), self.contributorsList)
         self.contributorsList.setHeaderLabels([_("Name"), _("Organization")])
         formLayout.addRow(_("Contributors:"), self.contributorsList)
 
@@ -59,6 +65,7 @@ class _ui_EditExtensionMetadataDialog:
 class EditExtensionMetadataDialog:
 
     project = _map_property(lambda self: self.ui.nameEdit, "text")
+    category = _map_property(lambda self: self.ui.categoryEdit, "text")
     description = _map_property(lambda self: self.ui.descriptionEdit, "plainText")
 
     project = _map_property(lambda self: self.ui.nameEdit, "text")
@@ -78,9 +85,12 @@ class EditExtensionMetadataDialog:
     def accept(self):
         if not len(self.project):
             slicer.util.errorDisplay(_("Extension name may not be empty."), windowTitle=_("Invalid metadata"), parent=self.dialog)
+            slicer.util.errorDisplay(_("Extension name may not be empty."), windowTitle=_("Invalid metadata"), parent=self.dialog)
             return
 
         if not len(self.description):
+            slicer.util.errorDisplay(_("Extension description may not be empty."),
+                                     windowTitle=_("Invalid metadata"), parent=self.dialog)
             slicer.util.errorDisplay(_("Extension description may not be empty."),
                                      windowTitle=_("Invalid metadata"), parent=self.dialog)
             return
